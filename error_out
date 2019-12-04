@@ -1,0 +1,109 @@
+Loading fashion-mnist data... done
+Loading model... done
+New Inference
+Op Time: 0.005384
+========= CUDA-MEMCHECK
+========= Program hit cudaErrorInvalidConfiguration (error 9) due to "invalid configuration argument" on CUDA API call to cudaLaunch. 
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:/lib64/libcuda.so.1 [0x391b13]
+=========     Host Frame:/usr/local/cuda-8.0/lib64/libcudart.so.8.0 (cudaLaunch + 0x17e) [0x337be]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_Z54__device_stub__ZN5mxnet2op14forward_kernelEPfPKfiiiiiiPfPKfiiiiii + 0x105) [0x3e66da5]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet2op7forwardIN7mshadow3gpuEfEEvRNS2_6TensorIT_Li4ET0_EERKS7_SA_ + 0x25e) [0x3e6701e]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet2op5NewOpIN7mshadow3gpuEfE7ForwardERKNS_9OpContextERKSt6vectorINS_5TBlobESaIS9_EERKS8_INS_9OpReqTypeESaISE_EESD_SD_ + 0x908) [0x3e6c3f8]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet2op13OperatorState7ForwardERKNS_9OpContextERKSt6vectorINS_5TBlobESaIS6_EERKS5_INS_9OpReqTypeESaISB_EESA_ + 0x345) [0x36ad885]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet4exec23StatefulComputeExecutor3RunENS_10RunContextEb + 0x59) [0x3d12879]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so [0x3cead96]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet6engine14ThreadedEngine15ExecuteOprBlockENS_10RunContextEPNS0_8OprBlockE + 0x589) [0x3c60229]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet6engine23ThreadedEnginePerDevice9GPUWorkerILN4dmlc19ConcurrentQueueTypeE0EEEvNS_7ContextEbPNS1_17ThreadWorkerBlockIXT_EEERKSt10shared_ptrINS3_11ManualEventEE + 0xeb) [0x3c70c1b]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZNSt17_Function_handlerIFvSt10shared_ptrIN4dmlc11ManualEventEEEZZN5mxnet6engine23ThreadedEnginePerDevice13PushToExecuteEPNS6_8OprBlockEbENKUlvE2_clEvEUlS3_E_E9_M_invokeERKSt9_Any_dataS3_ + 0x46) [0x3c70e66]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZNSt6thread5_ImplISt12_Bind_simpleIFSt8functionIFvSt10shared_ptrIN4dmlc11ManualEventEEEES6_EEE6_M_runEv + 0x44) [0x3c5fb74]
+=========     Host Frame:/lib64/libstdc++.so.6 [0xb5070]
+=========     Host Frame:/lib64/libpthread.so.0 [0x7dd5]
+=========     Host Frame:/lib64/libc.so.6 (clone + 0x6d) [0xfdead]
+=========
+========= Program hit cudaErrorInvalidConfiguration (error 9) due to "invalid configuration argument" on CUDA API call to cudaPeekAtLastError. 
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:/lib64/libcuda.so.1 [0x391b13]
+=========     Host Frame:/usr/local/cuda-8.0/lib64/libcudart.so.8.0 (cudaPeekAtLastError + 0x163) [0x30d73]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN7mshadow4cuda7MapPlanINS_2sv6savetoENS_6TensorINS_3gpuELi4EfEENS_4expr12BinaryMapExpINS_2op3mulENS7_9ScalarExpIfEES6_fLi1EEEfEEvNS7_4PlanIT0_T2_EERKNSE_IT1_SG_EENS_5ShapeILi2EEEP11CUstream_st + 0x2ee) [0x3e6990e]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN7mshadow6MapExpINS_2sv6savetoENS_6TensorINS_3gpuELi4EfEELi4EfNS_4expr12BinaryMapExpINS_2op3mulENS6_9ScalarExpIfEES5_fLi1EEELi1EEEvPNS_7TRValueIT0_S4_XT1_ET2_EERKNS6_3ExpIT3_SF_XT4_EEE + 0xf5) [0x3e6b9f5]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet2op5NewOpIN7mshadow3gpuEfE7ForwardERKNS_9OpContextERKSt6vectorINS_5TBlobESaIS9_EERKS8_INS_9OpReqTypeESaISE_EESD_SD_ + 0x8d9) [0x3e6c3c9]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet2op13OperatorState7ForwardERKNS_9OpContextERKSt6vectorINS_5TBlobESaIS6_EERKS5_INS_9OpReqTypeESaISB_EESA_ + 0x345) [0x36ad885]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet4exec23StatefulComputeExecutor3RunENS_10RunContextEb + 0x59) [0x3d12879]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so [0x3cead96]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet6engine14ThreadedEngine15ExecuteOprBlockENS_10RunContextEPNS0_8OprBlockE + 0x589) [0x3c60229]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet6engine23ThreadedEnginePerDevice9GPUWorkerILN4dmlc19ConcurrentQueueTypeE0EEEvNS_7ContextEbPNS1_17ThreadWorkerBlockIXT_EEERKSt10shared_ptrINS3_11ManualEventEE + 0xeb) [0x3c70c1b]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZNSt17_Function_handlerIFvSt10shared_ptrIN4dmlc11ManualEventEEEZZN5mxnet6engine23ThreadedEnginePerDevice13PushToExecuteEPNS6_8OprBlockEbENKUlvE2_clEvEUlS3_E_E9_M_invokeERKSt9_Any_dataS3_ + 0x46) [0x3c70e66]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZNSt6thread5_ImplISt12_Bind_simpleIFSt8functionIFvSt10shared_ptrIN4dmlc11ManualEventEEEES6_EEE6_M_runEv + 0x44) [0x3c5fb74]
+=========     Host Frame:/lib64/libstdc++.so.6 [0xb5070]
+=========     Host Frame:/lib64/libpthread.so.0 [0x7dd5]
+=========     Host Frame:/lib64/libc.so.6 (clone + 0x6d) [0xfdead]
+=========
+========= Program hit cudaErrorCudartUnloading (error 29) due to "driver shutting down" on CUDA API call to cudaSetDevice. 
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:/lib64/libcuda.so.1 [0x391b13]
+=========     Host Frame:/usr/local/cuda-8.0/lib64/libcudart.so.8.0 (cudaSetDevice + 0x180) [0x412e0]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN7mshadow9SetDeviceINS_3gpuEEEvi + 0x19) [0x3c6d0c9]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet6engine23ThreadedEnginePerDevice13PushToExecuteEPNS0_8OprBlockEb + 0x2fe) [0x3c7654e]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet6engine14ThreadedEngine9PushAsyncESt8functionIFvNS_10RunContextENS0_18CallbackOnCompleteEEENS_7ContextERKSt6vectorIPNS0_3VarESaISA_EESE_NS_10FnPropertyEiPKcb + 0x16a) [0x3c6483a]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet6engine14ThreadedEngine14DeleteVariableESt8functionIFvNS_10RunContextEEENS_7ContextEPNS0_3VarE + 0x1a1) [0x3c64f81]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet8resource19ResourceManagerImpl17ResourceTempSpaceD1Ev + 0x1a9) [0x3dc1469]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZNSt15_Sp_counted_ptrIPN5mxnet8resource19ResourceManagerImpl17ResourceTempSpaceELN9__gnu_cxx12_Lock_policyE2EE10_M_disposeEv + 0x12) [0x3dc1512]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZNSt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EE10_M_releaseEv + 0x3a) [0xd8443a]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet6common14LazyAllocArrayINS_8resource19ResourceManagerImpl17ResourceTempSpaceEE5ClearEv + 0xd1) [0x3dc5341]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet8resource19ResourceManagerImplD1Ev + 0x189) [0x3dc6779]
+=========     Host Frame:/lib64/libstdc++.so.6 [0x5cb19]
+=========     Host Frame:/lib64/libc.so.6 [0x39b69]
+=========     Host Frame:/lib64/libc.so.6 [0x39bb7]
+=========     Host Frame:/lib64/libc.so.6 (__libc_start_main + 0xfc) [0x223dc]
+=========     Host Frame:python [0x66e]
+=========
+========= Program hit cudaErrorCudartUnloading (error 29) due to "driver shutting down" on CUDA API call to cudaStreamDestroy. 
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:/lib64/libcuda.so.1 [0x391b13]
+=========     Host Frame:/usr/local/cuda-8.0/lib64/libcudart.so.8.0 (cudaStreamDestroy + 0x15e) [0x43c1e]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN7mshadow12DeleteStreamINS_3gpuEEEvPNS_6StreamIT_EE + 0x2a) [0x3c559da]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet6engine23ThreadedEnginePerDevice9GPUWorkerILN4dmlc19ConcurrentQueueTypeE0EEEvNS_7ContextEbPNS1_17ThreadWorkerBlockIXT_EEERKSt10shared_ptrINS3_11ManualEventEE + 0x102) [0x3c70c32]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZNSt17_Function_handlerIFvSt10shared_ptrIN4dmlc11ManualEventEEEZZN5mxnet6engine23ThreadedEnginePerDevice13PushToExecuteEPNS6_8OprBlockEbENKUlvE2_clEvEUlS3_E_E9_M_invokeERKSt9_Any_dataS3_ + 0x46) [0x3c70e66]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZNSt6thread5_ImplISt12_Bind_simpleIFSt8functionIFvSt10shared_ptrIN4dmlc11ManualEventEEEES6_EEE6_M_runEv + 0x44) [0x3c5fb74]
+=========     Host Frame:/lib64/libstdc++.so.6 [0xb5070]
+=========     Host Frame:/lib64/libpthread.so.0 [0x7dd5]
+=========     Host Frame:/lib64/libc.so.6 (clone + 0x6d) [0xfdead]
+=========
+========= Program hit cudaErrorCudartUnloading (error 29) due to "driver shutting down" on CUDA API call to cudaStreamDestroy. 
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:/lib64/libcuda.so.1 [0x391b13]
+=========     Host Frame:/usr/local/cuda-8.0/lib64/libcudart.so.8.0 (cudaStreamDestroy + 0x15e) [0x43c1e]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN7mshadow12DeleteStreamINS_3gpuEEEvPNS_6StreamIT_EE + 0x2a) [0x3c559da]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet6engine23ThreadedEnginePerDevice9GPUWorkerILN4dmlc19ConcurrentQueueTypeE0EEEvNS_7ContextEbPNS1_17ThreadWorkerBlockIXT_EEERKSt10shared_ptrINS3_11ManualEventEE + 0x102) [0x3c70c32]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZNSt17_Function_handlerIFvSt10shared_ptrIN4dmlc11ManualEventEEEZZN5mxnet6engine23ThreadedEnginePerDevice13PushToExecuteEPNS6_8OprBlockEbENKUlvE2_clEvEUlS3_E_E9_M_invokeERKSt9_Any_dataS3_ + 0x46) [0x3c70e66]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZNSt6thread5_ImplISt12_Bind_simpleIFSt8functionIFvSt10shared_ptrIN4dmlc11ManualEventEEEES6_EEE6_M_runEv + 0x44) [0x3c5fb74]
+=========     Host Frame:/lib64/libstdc++.so.6 [0xb5070]
+=========     Host Frame:/lib64/libpthread.so.0 [0x7dd5]
+=========     Host Frame:/lib64/libc.so.6 (clone + 0x6d) [0xfdead]
+=========
+========= Program hit cudaErrorCudartUnloading (error 29) due to "driver shutting down" on CUDA API call to cudaStreamDestroy. 
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:/lib64/libcuda.so.1 [0x391b13]
+=========     Host Frame:/usr/local/cuda-8.0/lib64/libcudart.so.8.0 (cudaStreamDestroy + 0x15e) [0x43c1e]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN7mshadow12DeleteStreamINS_3gpuEEEvPNS_6StreamIT_EE + 0x2a) [0x3c559da]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet6engine23ThreadedEnginePerDevice9GPUWorkerILN4dmlc19ConcurrentQueueTypeE1EEEvNS_7ContextEbPNS1_17ThreadWorkerBlockIXT_EEERKSt10shared_ptrINS3_11ManualEventEE + 0x102) [0x3c737c2]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZNSt17_Function_handlerIFvSt10shared_ptrIN4dmlc11ManualEventEEEZZN5mxnet6engine23ThreadedEnginePerDevice13PushToExecuteEPNS6_8OprBlockEbENKUlvE0_clEvEUlS3_E_E9_M_invokeERKSt9_Any_dataS3_ + 0x46) [0x3c739f6]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZNSt6thread5_ImplISt12_Bind_simpleIFSt8functionIFvSt10shared_ptrIN4dmlc11ManualEventEEEES6_EEE6_M_runEv + 0x44) [0x3c5fb74]
+=========     Host Frame:/lib64/libstdc++.so.6 [0xb5070]
+=========     Host Frame:/lib64/libpthread.so.0 [0x7dd5]
+=========     Host Frame:/lib64/libc.so.6 (clone + 0x6d) [0xfdead]
+=========
+========= Program hit cudaErrorCudartUnloading (error 29) due to "driver shutting down" on CUDA API call to cudaStreamDestroy. 
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:/lib64/libcuda.so.1 [0x391b13]
+=========     Host Frame:/usr/local/cuda-8.0/lib64/libcudart.so.8.0 (cudaStreamDestroy + 0x15e) [0x43c1e]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN7mshadow12DeleteStreamINS_3gpuEEEvPNS_6StreamIT_EE + 0x2a) [0x3c559da]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZN5mxnet6engine23ThreadedEnginePerDevice9GPUWorkerILN4dmlc19ConcurrentQueueTypeE1EEEvNS_7ContextEbPNS1_17ThreadWorkerBlockIXT_EEERKSt10shared_ptrINS3_11ManualEventEE + 0x102) [0x3c737c2]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZNSt17_Function_handlerIFvSt10shared_ptrIN4dmlc11ManualEventEEEZZN5mxnet6engine23ThreadedEnginePerDevice13PushToExecuteEPNS6_8OprBlockEbENKUlvE0_clEvEUlS3_E_E9_M_invokeERKSt9_Any_dataS3_ + 0x46) [0x3c739f6]
+=========     Host Frame:/data/home/eecs498team18/incubator-mxnet/python/mxnet/../../lib/libmxnet.so (_ZNSt6thread5_ImplISt12_Bind_simpleIFSt8functionIFvSt10shared_ptrIN4dmlc11ManualEventEEEES6_EEE6_M_runEv + 0x44) [0x3c5fb74]
+=========     Host Frame:/lib64/libstdc++.so.6 [0xb5070]
+=========     Host Frame:/lib64/libpthread.so.0 [0x7dd5]
+=========     Host Frame:/lib64/libc.so.6 (clone + 0x6d) [0xfdead]
+=========
+========= ERROR SUMMARY: 7 errors

@@ -8,7 +8,7 @@ namespace mxnet
 namespace op
 {
 
-__constant__ float kernels[65536 / 4];
+__constant__ float kernels[8192];
 
 __global__ void forward_kernel(float *y, const float *x, const int B, const int M, const int C, const int H, const int W, const int K)
 {
@@ -45,14 +45,14 @@ __global__ void forward_kernel(float *y, const float *x, const int B, const int 
             int row = index / W_out;
             int col = index % W_out;
             y4d(imageNumber, kernelNumber, row, col) = 0;  // sum over all input feature maps
-            for (int channelNumber = 0; channelNumber < C; channelNumber++)
+            for (int channelNumber = 0; channelNumber < C; channelNumber++) {
 
                 // read one channel into shared memory
                 int shared_index = threadIdx.x;
-                while(index < imageSize) {
-                    int row = shared_index / W;
-                    int col = shared_index % W;
-                    x4d(row, col) = sharedIndex(imageNumber, channelNumber, shared_index);
+                while(shared_index < imageSize) {
+                    int shared_row = shared_index / W;
+                    int shared_col = shared_index % W;
+                    x4d(shared_row, shared_col) = sharedIndex(imageNumber, channelNumber, shared_index);
                     shared_index += numThreads;
                 }
                 __syncthreads();
@@ -60,7 +60,8 @@ __global__ void forward_kernel(float *y, const float *x, const int B, const int 
                 for (int p = 0; p < K; p++) // KxK filter
                     for (int q = 0; q < K; q++)
                         y4d(imageNumber, kernelNumber, row, col) += x4d(row + p, col + q) * k4d(kernelNumber, channelNumber, p, q);           
-            index += numThreads;
+            }
+	    index += numThreads;
         }
     }
 
@@ -91,8 +92,10 @@ void forward<gpu, float>(mshadow::Tensor<gpu, 4, float> &y, const mshadow::Tenso
     dim3 gridDim((B + 511) / 512, M);
     dim3 blockDim(1024);
 
-    // need to find count 
-    cudaMemcpyToSymbol(kernels, w.dptr_, K, cudaMemcpyDeviceToDevice);
+    // need to find count
+    // size_t w_size = w.shape_[0] * w.shape_[1] * w.shape_[2] * w.shape_[3]; 
+    size_t w_size = K*K;
+	cudaMemcpyToSymbol(kernels, w.dptr_, w_size * sizeof(float), cudaMemcpyDeviceToDevice);
 
     MSHADOW_CUDA_CALL(cudaDeviceSynchronize());
     forward_kernel<<<gridDim, blockDim>>>(y.dptr_, x.dptr_, B, M, C, H, W, K);

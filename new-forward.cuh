@@ -13,7 +13,7 @@ __constant__ float[65536] kernels;
 __global__ void forward_kernel(float *y, const float *x, const int B, const int M, const int C, const int H, const int W, const int K)
 {
 
-    __shared__ float [28*28] inputImage;
+    __shared__ float [H*W] inputImage;
     /*
     The goal here is to be correct AND fast.
     We have some nice #defs for you below to simplify indexing. Feel free to use them, or create your own.
@@ -28,32 +28,36 @@ __global__ void forward_kernel(float *y, const float *x, const int B, const int 
 #define x4d(i1, i0) inputImage[(i1) * (W) + i0]
 #define k4d(i3, i2, i1, i0) kernels[(i3) * (C * K * K) + (i2) * (K * K) + (i1) * (K) + i0]
 
-    int row = threadIdx.x;
-    int col = threadIdx.y;
-
-    int element = row*blockDim.x + col;
-    int numThreads = blockDim.x * blockdimx.y;
-    int imageSize = H * W;
-
-    int channelNumber = blockIdx.y;
-    int imageNumber = blockIdx.x;
-    int kernelNumber = blockIdx.z;
-
-    while(element < imageSize) {
-        inputImage[element] = sharedIndex(imageNumber, channelNumber,element);
-        element += numThreads;
-    }
-
     const int H_out = H - K + 1;
     const int W_out = W - K + 1;
 
+    const int numThreads = blockDim.x;
+    const int imageSize = H * W;
+    const int outputSize = H_out * W_out
+
+    const int channelNumber = blockIdx.y;
+    const int imageNumber = blockIdx.x;
+    const int kernelNumber = blockIdx.z;
+
+    index = threadId.x;
+    while(index < imageSize) {
+        inputImage[index] = sharedIndex(imageNumber, channelNumber, index);
+        index += numThreads;
+    }
+
     // if the block is less than the batch size
-    if (imageNumber < B && channgelNumber < C && kernelNumber < M) // for each image in the batch
+    if (imageNumber < B && channelNumber < C && kernelNumber < M) // for each image in the batch
     {
-        y4d(b, kernelNumber, threadIdx.x, threadIdx.y) = 0;  // sum over all input feature maps
-        for (int p = 0; p < K; p++) // KxK filter
-            for (int q = 0; q < K; q++)
-                 y4d(b, kernelNumber, threadIdx.x, threadIdx.y) += x4d(threadIdx.x + p, threadIdx.y + q) * k4d(kernelNumber, channelNumber, p, q);
+        index = threadId.x;
+        while (index < outputSize) {
+            int row = index / W_out;
+            int col = index % W_out;
+            y4d(imageNumber, kernelNumber, row, col) = 0;  // sum over all input feature maps
+            for (int p = 0; p < K; p++) // KxK filter
+                for (int q = 0; q < K; q++)
+                    y4d(b, kernelNumber, row, col) += x4d(row + p, col + q) * k4d(kernelNumber, channelNumber, p, q);           
+            index += numThreads;
+        }
     }
 
 #undef y4d
@@ -81,7 +85,7 @@ void forward<gpu, float>(mshadow::Tensor<gpu, 4, float> &y, const mshadow::Tenso
     const int K = w.shape_[3];
 
     dim3 gridDim((B + 511) / 512, C, M);
-    dim3 blockDim(H-K+1,W-K+1);
+    dim3 blockDim(1024);
 
     // need to find count 
     cudaMemcpyToSymbol(kernels, w.dptr_, K, cudaMemcpyDeviceToDevice);

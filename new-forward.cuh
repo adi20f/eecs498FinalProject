@@ -8,7 +8,7 @@ namespace mxnet
 namespace op
 {
 
-__constant__ float kernels[65536 / 4];
+__constant__ float kernels[8192];
 
 __global__ void forward_kernel(float *y, const float *x, const int B, const int M, const int C, const int H, const int W, const int K)
 {

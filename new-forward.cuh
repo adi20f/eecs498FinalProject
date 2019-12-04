@@ -59,9 +59,9 @@ __global__ void forward_kernel(float *y, const float *x, const int B, const int 
 
                 for (int p = 0; p < K; p++) // KxK filter
                     for (int q = 0; q < K; q++)
-                        y4d(imageNumber, kernelNumber, row, col) += x4d(row + p, col + q) * k4d(kernelNumber, channelNumber, p, q);           
+                        y4d(imageNumber, kernelNumber, row, col) += x4d(row + p, col + q) * k4d(kernelNumber, channelNumber, p, q);                
             }
-	    index += numThreads;
+            index += numThreads;
         }
     }
 

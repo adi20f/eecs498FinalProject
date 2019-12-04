@@ -69,6 +69,16 @@ void forward<gpu, float>(mshadow::Tensor<gpu, 4, float> &y, const mshadow::Tenso
     dim3 gridDim((B + 511) / 512);
     dim3 blockDim(512);
 
+    cout << "---------------New Batch---------------"
+    cout << "Batch Size: "<<B<<endl;
+    cout << "Num of Filters: "<< M << endl;
+    cout << "Num of Channels: "<< C << endl;
+    cout << "Height: "<< H << endl;
+    cout << "Width: " << W << endl;
+    cout << "Num of Kernels: " << K << endl;
+
+    cout << endl << endl;
+
     MSHADOW_CUDA_CALL(cudaDeviceSynchronize());
     forward_kernel<<<gridDim, blockDim>>>(y.dptr_, x.dptr_, w.dptr_, B, M, C, H, W, K);
     MSHADOW_CUDA_CALL(cudaDeviceSynchronize());

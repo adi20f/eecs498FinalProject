@@ -45,21 +45,22 @@ __global__ void forward_kernel(float *y, const float *x, const int B, const int 
             int row = index / W_out;
             int col = index % W_out;
             y4d(imageNumber, kernelNumber, row, col) = 0;  // sum over all input feature maps
-            for (int channelNumber = 0; channelNumber < C; channelNumber++)
+            for (int channelNumber = 0; channelNumber < C; channelNumber++) {
 
                 // read one channel into shared memory
                 int shared_index = threadIdx.x;
-                while(index < imageSize) {
-                    int row = shared_index / W;
-                    int col = shared_index % W;
-                    x4d(row, col) = sharedIndex(imageNumber, channelNumber, shared_index);
+                while (shared_index < imageSize) {
+                    int shared_row = shared_index / W;
+                    int shared_col = shared_index % W;
+                    x4d(shared_row, shared_col) = sharedIndex(imageNumber, channelNumber, shared_index);
                     shared_index += numThreads;
                 }
                 __syncthreads();
 
                 for (int p = 0; p < K; p++) // KxK filter
                     for (int q = 0; q < K; q++)
-                        y4d(imageNumber, kernelNumber, row, col) += x4d(row + p, col + q) * k4d(kernelNumber, channelNumber, p, q);           
+                        y4d(imageNumber, kernelNumber, row, col) += x4d(row + p, col + q) * k4d(kernelNumber, channelNumber, p, q);                
+            }
             index += numThreads;
         }
     }

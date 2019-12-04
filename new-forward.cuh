@@ -8,12 +8,12 @@ namespace mxnet
 namespace op
 {
 
-__constant__ float[65536] kernels; 
+__constant__ float kernels[65536 / 4];
 
 __global__ void forward_kernel(float *y, const float *x, const int B, const int M, const int C, const int H, const int W, const int K)
 {
 
-    __shared__ float [H*W] inputImage;
+    __shared__ float inputImage[H*W];
     /*
     The goal here is to be correct AND fast.
     We have some nice #defs for you below to simplify indexing. Feel free to use them, or create your own.
@@ -39,15 +39,14 @@ __global__ void forward_kernel(float *y, const float *x, const int B, const int 
     const int imageNumber = blockIdx.x;
     const int kernelNumber = blockIdx.z;
 
-    index = threadId.x;
+    int index = threadId.x;
     while(index < imageSize) {
         inputImage[index] = sharedIndex(imageNumber, channelNumber, index);
         index += numThreads;
     }
 
     // if the block is less than the batch size
-    if (imageNumber < B && channelNumber < C && kernelNumber < M) // for each image in the batch
-    {
+    if (imageNumber < B && channelNumber < C && kernelNumber < M) { // for each image in the batch
         index = threadId.x;
         while (index < outputSize) {
             int row = index / W_out;
@@ -55,8 +54,8 @@ __global__ void forward_kernel(float *y, const float *x, const int B, const int 
             y4d(imageNumber, kernelNumber, row, col) = 0;  // sum over all input feature maps
             for (int p = 0; p < K; p++) // KxK filter
                 for (int q = 0; q < K; q++)
-                    y4d(b, kernelNumber, row, col) += x4d(row + p, col + q) * k4d(kernelNumber, channelNumber, p, q);           
-            index += numThreads;
+                    y4d(imageNumber, kernelNumber, row, col) += x4d(row + p, col + q) * k4d(kernelNumber, channelNumber, p, q);           
+            int index += numThreads;
         }
     }
 

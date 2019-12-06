@@ -50,7 +50,7 @@ __global__ void forward_kernel(float *y, const float *x, const int B, const int 
 
                 // read one channel into shared memory
                 int shared_index = threadIdx.x;
-                while (shared_index < imageSize) {
+                while(shared_index < imageSize) {
                     int shared_row = shared_index / W;
                     int shared_col = shared_index % W;
                     x4d(shared_row, shared_col) = sharedIndex(imageNumber, channelNumber, shared_index);

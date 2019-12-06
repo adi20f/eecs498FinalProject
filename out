@@ -1,0 +1,22 @@
+Loading fashion-mnist data... done
+Loading model... done
+New Inference
+---------------New Batch---------------Batch Size: 10000
+Num of Filters: 12
+Num of Channels: 1
+Height: 72
+Width: 72
+Num of Kernels: 7
+
+
+Op Time: 6.330251
+---------------New Batch---------------Batch Size: 10000
+Num of Filters: 24
+Num of Channels: 12
+Height: 33
+Width: 33
+Num of Kernels: 7
+
+
+Op Time: 25.611184
+Correctness: 0.7955 Model: eecs498

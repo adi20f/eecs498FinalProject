@@ -37,7 +37,7 @@ __global__ void forward_kernel(float *y, const float *x, const int B, const int 
 
     int imageNumber = blockIdx.x;
     const int kernelNumber = blockIdx.y;
-    const int numBlocks = gridDim.x
+    const int numBlocks = gridDim.x;
 
     // if the block is less than the batch size
     while (imageNumber < B && kernelNumber < M) { // for each image in the batch
@@ -64,7 +64,7 @@ __global__ void forward_kernel(float *y, const float *x, const int B, const int 
             }
             index += numThreads;
         }
-        imageNumber += numBlocks
+        imageNumber += numBlocks;
     }
 
 #undef y4d

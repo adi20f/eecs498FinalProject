@@ -35,11 +35,12 @@ __global__ void forward_kernel(float *y, const float *x, const int B, const int 
     const int imageSize = H * W;
     const int outputSize = H_out * W_out;
 
-    const int imageNumber = blockIdx.x;
+    int imageNumber = blockIdx.x;
     const int kernelNumber = blockIdx.y;
+    const int numBlocks = gridDim.x
 
     // if the block is less than the batch size
-    if (imageNumber < B && kernelNumber < M) { // for each image in the batch
+    while (imageNumber < B && kernelNumber < M) { // for each image in the batch
         int index = threadIdx.x;
         while (index < outputSize) {
             int row = index / W_out;
@@ -63,6 +64,7 @@ __global__ void forward_kernel(float *y, const float *x, const int B, const int 
             }
             index += numThreads;
         }
+        imageNumber += numBlocks
     }
 
 #undef y4d
@@ -89,13 +91,15 @@ void forward<gpu, float>(mshadow::Tensor<gpu, 4, float> &y, const mshadow::Tenso
     const int W = x.shape_[3];
     const int K = w.shape_[3];
 
-    dim3 gridDim((B + 511) / 512, M);
+    dim3 gridDim((1024, M);
     dim3 blockDim(1024);
 
-    // need to find count 
-    cudaMemcpyToSymbol(kernels, w.dptr_, K, cudaMemcpyDeviceToDevice);
-
     MSHADOW_CUDA_CALL(cudaDeviceSynchronize());
+
+    // need to find count
+    size_t w_size = M * C * K * K;
+    cudaMemcpyToSymbol(kernels, w.dptr_, w_size * sizeof(float));
+
     forward_kernel<<<gridDim, blockDim>>>(y.dptr_, x.dptr_, B, M, C, H, W, K);
     MSHADOW_CUDA_CALL(cudaDeviceSynchronize());
 }

@@ -24,8 +24,8 @@ __global__ void forward_kernel(float *y, const float *x, const int B, const int 
 // float a = y4d(0,0,0,0)
 // y4d(0,0,0,0) = a
 #define y4d(i3, i2, i1, i0) y[(i3) * (M * H_out * W_out) + (i2) * (H_out * W_out) + (i1) * (W_out) + i0]
-#define sharedIndex(i3, i2, i1) x[(i3) * (C * H * W) + (i2) * (H * W) + (i1)]
-#define x4d(i1, i0) inputImage[(i1) * 72 + i0]
+#define x4d(i3, i2, i1) x[(i3) * (C * H * W) + (i2) * (H * W) + (i1)]
+#define sharedIndex(i1, i0) inputImage[(i1) * (W) + i0]
 #define k4d(i3, i2, i1, i0) kernels[(i3) * (C * K * K) + (i2) * (K * K) + (i1) * (K) + i0]
 
     const int H_out = H - K + 1;
@@ -41,28 +41,24 @@ __global__ void forward_kernel(float *y, const float *x, const int B, const int 
 
     // if the block is less than the batch size
     while (imageNumber < B && kernelNumber < M) { // for each image in the batch
-        int index = threadIdx.x;
-        while (index < outputSize) {
+        for (int index = threadIdx.x; index < outputSize; index += numThreads) {
             int row = index / W_out;
             int col = index % W_out;
-            y4d(imageNumber, kernelNumber, row, col) = 0;  // sum over all input feature maps
-            for (int channelNumber = 0; channelNumber < C; channelNumber++) {
-
-                // read one channel into shared memory
-                int shared_index = threadIdx.x;
-                while(shared_index < imageSize) {
-                    int shared_row = shared_index / W;
-                    int shared_col = shared_index % W;
-                    x4d(shared_row, shared_col) = sharedIndex(imageNumber, channelNumber, shared_index);
-                    shared_index += numThreads;
-                }
-                __syncthreads();
-
+            y4d(imageNumber, kernelNumber, row, col) = 0; // sum over all input feature maps
+        }
+        for (int channelNumber = 0; channelNumber < C; channelNumber++) {
+            // read one channel into shared memory
+            for shared_index = threadIdx.x; shared_index < imageSize; shared_index += numThreads)
+                inputImage[shared_index] = sharedIndex(imageNumber, channelNumber, shared_index);
+            __syncthreads();
+            
+            for (int index = threadIdx.x; index < outputSize; index += numThreads) {
+                int row = index / W_out;
+                int col = index % W_out;
                 for (int p = 0; p < K; p++) // KxK filter
                     for (int q = 0; q < K; q++)
-                        y4d(imageNumber, kernelNumber, row, col) += x4d(row + p, col + q) * k4d(kernelNumber, channelNumber, p, q);                
-            }
-            index += numThreads;
+                        y4d(imageNumber, kernelNumber, row, col) += sharedIndex(row + p, col + q) * k4d(kernelNumber, channelNumber, p, q);  
+            }              
         }
         imageNumber += numBlocks;
     }
@@ -70,6 +66,7 @@ __global__ void forward_kernel(float *y, const float *x, const int B, const int 
 #undef y4d
 #undef x4d
 #undef k4d
+#undef sharedIndex
 }
 
 /* 
@@ -91,7 +88,7 @@ void forward<gpu, float>(mshadow::Tensor<gpu, 4, float> &y, const mshadow::Tenso
     const int W = x.shape_[3];
     const int K = w.shape_[3];
 
-    dim3 gridDim((1024, M);
+    dim3 gridDim(1024, M);
     dim3 blockDim(1024);
 
     MSHADOW_CUDA_CALL(cudaDeviceSynchronize());

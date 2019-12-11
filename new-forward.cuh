@@ -40,27 +40,22 @@ __global__ void forward_kernel(float *y, const float *x, const int B, const int 
     const int numBlocks = gridDim.x;
 
     // if the block is less than the batch size
-    while (imageNumber < B && kernelNumber < M) { // for each image in the batch
+    while (imageNumber < B && kernelNumber < M, channelNumber < C) { // for each image in the batch
+        // read one channel into shared memory
+        __syncthreads();
+        for (int shared_index = threadIdx.x; shared_index < imageSize; shared_index += numThreads)
+            inputImage[shared_index] = x4d(imageNumber, channelNumber, shared_index);
+        __syncthreads();
+        
         for (int index = threadIdx.x; index < outputSize; index += numThreads) {
             int row = index / W_out;
             int col = index % W_out;
-            y4d(imageNumber, kernelNumber, row, col) = 0; // sum over all input feature maps
-        }
-        for (int channelNumber = 0; channelNumber < C; channelNumber++) {
-            // read one channel into shared memory
-            __syncthreads();
-            for (int shared_index = threadIdx.x; shared_index < imageSize; shared_index += numThreads)
-                inputImage[shared_index] = x4d(imageNumber, channelNumber, shared_index);
-            __syncthreads();
-            
-            for (int index = threadIdx.x; index < outputSize; index += numThreads) {
-                int row = index / W_out;
-                int col = index % W_out;
-                for (int p = 0; p < K; p++) // KxK filter
-                    for (int q = 0; q < K; q++)
-                        y4d(imageNumber, kernelNumber, row, col) += sharedIndex(row + p, col + q) * k4d(kernelNumber, channelNumber, p, q);  
-            }              
-        }
+            float result = 0;
+            for (int p = 0; p < K; p++) // KxK filter
+                for (int q = 0; q < K; q++)
+                    result += sharedIndex(row + p, col + q) * k4d(kernelNumber, channelNumber, p, q);
+            atomicAdd(&y4d(imageNumber, kernelNumber, row, col), result);
+        }              
         imageNumber += numBlocks;
     }
 
@@ -89,10 +84,11 @@ void forward<gpu, float>(mshadow::Tensor<gpu, 4, float> &y, const mshadow::Tenso
     const int W = x.shape_[3];
     const int K = w.shape_[3];
 
-    dim3 gridDim(1024, M);
+    dim3 gridDim(1024, M, C);
     dim3 blockDim(1024);
 
     MSHADOW_CUDA_CALL(cudaDeviceSynchronize());
+    cudaMemset(y.dptr_, 0.0f, y.shape_[0] * y.shape_[1] * y.shape_[2] * y.shape_[3] * sizeof(float));
 
     // need to find count
     size_t w_size = M * C * K * K;
